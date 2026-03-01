@@ -1,0 +1,37 @@
+def equations(vars):
+    x, y = vars
+    eq1 = (y-y1)**2+(x-x1)**2-r**2
+    eq2 = y - (a*x**2+b)
+    return [eq1, eq2]
+initial_guess = (3, 5)   # Change to (3,5) to get other intersection
+
+solution = fsolve(equations, initial_guess)
+x_sol, y_sol = solution
+
+print("Meeting Point:")
+print(f"x = {x_sol:.6f}")
+print(f"y = {y_sol:.6f}")
+x_vals = np.linspace(-10, 10, 400)
+y_parabola = a*x_vals**2 + b
+
+theta = np.linspace(0, 2*np.pi, 400)
+x_circle = x1 + r*np.cos(theta)
+y_circle = y1 + r*np.sin(theta)
+
+plt.figure()
+plt.plot(x_vals, y_parabola)
+plt.plot(x_circle, y_circle)
+
+# Highlight meeting point
+plt.plot(x_sol, y_sol, 'ro')
+
+plt.xlim(-10, 10)
+plt.ylim(-10, 10)
+
+plt.xlabel("x")
+plt.ylabel("y")
+plt.title("Circle and Parabola Meeting Point")
+plt.grid(True)
+plt.gca().set_aspect('equal', adjustable='box')
+
+plt.show()
