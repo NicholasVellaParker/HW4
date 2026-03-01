@@ -1,0 +1,5 @@
+% Solicite Inputs from User
+mu = float(input("Enter mean of ln(D), default 0.5")
+sigma = float(input("Enter std dev of ln(D), default 0.25")
+Dmin = float(input("Enter minimum rock diameter (mm), default 1")
+Dmax = float(input("Enter maximum rock diameter (mm), default 5")
