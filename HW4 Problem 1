@@ -1,5 +1,47 @@
-% Solicite Inputs from User
-mu = float(input("Enter mean of ln(D), default 0.5")
-sigma = float(input("Enter std dev of ln(D), default 0.25")
-Dmin = float(input("Enter minimum rock diameter (mm), default 1")
-Dmax = float(input("Enter maximum rock diameter (mm), default 5")
+#Solicite Inputs from User
+mu = float(input("Enter mean of ln(D), default 0.5:"))
+sigma = float(input("Enter std dev of ln(D), default 0.25:"))
+Dmin = float(input("Enter minimum rock diameter (mm), default 1:"))
+Dmax = float(input("Enter maximum rock diameter (mm), default 5:"))
+
+import numpy as np
+
+def lognormal_pdf(D, mu, sigma):
+    return 1 / (D * sigma * np.sqrt(2 * np.pi)) * np.exp(- (np.log(D) - mu)**2 / (2 * sigma**2));
+#integrate with quad
+from scipy.integrate import quad
+fraction, error = quad(lognormal_pdf, Dmin, Dmax, args=(mu, sigma))
+print("Fraction of rocks between Dmin and Dmax:", fraction)
+# pull samples
+num_samples = 11
+sample_size = 100
+
+sample_means = []
+sample_variances = []
+
+for _ in range(num_samples):
+    sample = []
+    while len(sample) < sample_size:
+        # Draw from log-normal distribution
+        D = np.random.lognormal(mean=mu, sigma=sigma)
+        # Keep only values within Dmin and Dmax
+        if Dmin <= D <= Dmax:
+            sample.append(D)
+
+    # Convert to numpy array for convenience
+    sample = np.array(sample)
+
+    # Compute statistics for this sample
+    mean_D = np.mean(sample)
+    var_D = np.var(sample, ddof=1)  # sample variance
+    sample_means.append(mean_D)
+    sample_variances.append(var_D)
+
+    print(f"\nSample mean: {mean_D:.3f}, Sample variance: {var_D:.3f}")
+    #mean and variance of sample mean
+sample_means = np.array(sample_means)
+mean_of_means = np.mean(sample_means)
+var_of_means = np.var(sample_means, ddof=1)
+
+print(f"\nMean of sample means: {mean_of_means:.3f}")
+print(f"Variance of sample means: {var_of_means:.3f}")
